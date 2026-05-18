@@ -1,0 +1,30 @@
+Aim: To build a rich text editor for writing articles. A preview button to the html preview. A sbumit button which is generate the string with HTML tags and style decoration to store into DB so that when it gets fetch, the styles and view remains same.
+
+This rich text editor can be used anywhere like
+<div class="articleforge"></div>
+<script src="ourjsscript.js"></script>
+
+Project name is ArticleForge so keep that naming in mind. People should use articleforge to use this.
+
+My plan is to put into github public repo so that people can freely use. It would be better if people can use it as dependency in laravel.
+
+Features:
+- Full screen typing in editor
+- Align text (left right center justify)
+- bold
+- font size
+- font color
+- select h1 to h6 tag
+- underline
+- italic
+- add image
+- image alignment left right center
+
+My Approch:
+- Generate the UI file in html
+- JS file for processing which includes sanitization and validation of content
+- Validation include no js or script tag i.e. no hacking attacks
+- This js file will generate the output string with HTML tags and style decoration to store into DB
+
+
+How would like to approch? Do you have better suggestion? Make sure that this much be reusable with laravel.
