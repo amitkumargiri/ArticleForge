@@ -192,7 +192,7 @@
       this.wrapper.innerHTML = `
         <div class="af-toolbar">
 
-          <button data-cmd="fullscreen" title="Fullscreen">Fullscreen</button>
+          <button type="button" data-cmd="fullscreen" title="Fullscreen">Fullscreen</button>
 
           <div class="af-sep"></div>
 
@@ -214,34 +214,34 @@
 
           <div class="af-sep"></div>
 
-          <button data-cmd="bold"><b>B</b></button>
-          <button data-cmd="italic"><i>I</i></button>
-          <button data-cmd="underline"><u>U</u></button>
+          <button type="button" data-cmd="bold"><b>B</b></button>
+          <button type="button" data-cmd="italic"><i>I</i></button>
+          <button type="button" data-cmd="underline"><u>U</u></button>
 
           <div class="af-sep"></div>
 
-          <button data-cmd="color" class="af-color-btn">
+          <button type="button" data-cmd="color" class="af-color-btn">
             <span class="af-color-letter">A</span>
             <span class="af-color-indicator"></span>
           </button>
 
           <div class="af-sep"></div>
 
-          <button data-cmd="justifyLeft" title="Align Left">Left</button>
-          <button data-cmd="justifyCenter" title="Align Center">Center</button>
-          <button data-cmd="justifyRight" title="Align Right">Right</button>
-          <button data-cmd="justifyFull" title="Justify">Justify</button>
+          <button type="button" data-cmd="justifyLeft" title="Align Left">Left</button>
+          <button type="button" data-cmd="justifyCenter" title="Align Center">Center</button>
+          <button type="button" data-cmd="justifyRight" title="Align Right">Right</button>
+          <button type="button" data-cmd="justifyFull" title="Justify">Justify</button>
 
           <div class="af-sep"></div>
 
-          <button data-cmd="insertUnorderedList">- List</button>
-          <button data-cmd="insertOrderedList">1. List</button>
+          <button type="button" data-cmd="insertUnorderedList">- List</button>
+          <button type="button" data-cmd="insertOrderedList">1. List</button>
 
           <div class="af-sep"></div>
 
-          <button data-cmd="insertImage">Image</button>
+          <button type="button" data-cmd="insertImage">Image</button>
 
-          <button data-cmd="preview" style="margin-left:auto;">
+          <button type="button" data-cmd="preview" style="margin-left:auto;">
             Preview
           </button>
 
