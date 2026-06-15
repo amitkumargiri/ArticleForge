@@ -57,6 +57,12 @@
     background:#f3f4f6;
   }
 
+  .af-toolbar button.active{
+      background:#e0e7ff;
+      border-color:#6366f1;
+      color:#4338ca;
+  }
+
   .af-sep{
     width:1px;
     height:22px;
@@ -305,15 +311,46 @@
         this._updateCounts();
       });
 
-      document.addEventListener("mousedown", e => {
+      this.editor.addEventListener("keydown", e => {
 
-        if (!this._colorPicker) return;
+          if (!e.ctrlKey) return;
 
-        if (this._colorPicker.contains(e.target)) return;
+          switch (e.key.toLowerCase()) {
 
-        if (e.target.closest('[data-cmd="color"]')) return;
+            case "b":
+              e.preventDefault();
+              document.execCommand("bold");
+              break;
 
-        this._dismissColorPicker();
+            case "i":
+              e.preventDefault();
+              document.execCommand("italic");
+              break;
+
+            case "u":
+              e.preventDefault();
+              document.execCommand("underline");
+              break;
+          }
+
+          this._updateToolbarState();
+      });
+
+      document.addEventListener("selectionchange", () => {
+
+          const sel = window.getSelection();
+
+          if (!sel.rangeCount) return;
+
+          const node = sel.anchorNode;
+
+          if (!this.editor.contains(node)) return;
+
+          this._saveRange();
+
+          requestAnimationFrame(() => {
+            this._updateToolbarState();
+          });
       });
     }
 
@@ -334,6 +371,7 @@
         case "insertOrderedList":
 
           document.execCommand(cmd,false,null);
+          this._updateToolbarState();
           break;
 
         case "formatBlock":
@@ -537,6 +575,131 @@
         .textContent = chars + " chars";
     }
 
+    _updateToolbarState() {
+
+      const toolbar = this.wrapper.querySelector(".af-toolbar");
+
+      const toggle = (cmd, selector) => {
+        const btn = toolbar.querySelector(selector);
+
+        if (!btn) return;
+
+        btn.classList.toggle(
+          "active",
+          document.queryCommandState(cmd)
+        );
+      };
+
+      // Formatting buttons
+      toggle("bold", '[data-cmd="bold"]');
+      toggle("italic", '[data-cmd="italic"]');
+      toggle("underline", '[data-cmd="underline"]');
+
+      // Alignment buttons
+      [
+        "justifyLeft",
+        "justifyCenter",
+        "justifyRight",
+        "justifyFull"
+      ].forEach(cmd => {
+
+        const btn = toolbar.querySelector(
+          `[data-cmd="${cmd}"]`
+        );
+
+        if (!btn) return;
+
+        btn.classList.toggle(
+          "active",
+          document.queryCommandState(cmd)
+        );
+      });
+
+      this._updateHeadingDropdown();
+      this._updateFontSizeDropdown();
+      this._updateColorIndicator();
+    }
+
+    _updateHeadingDropdown() {
+
+      const sel = window.getSelection();
+
+      if (!sel.rangeCount) return;
+
+      let node = sel.anchorNode;
+
+      if (node.nodeType === 3) {
+        node = node.parentElement;
+      }
+
+      const heading = node.closest(
+        "h1,h2,h3,h4,h5,h6,p"
+      );
+
+      if (!heading) return;
+
+      const select = this.wrapper.querySelector(
+        'select[data-cmd="formatBlock"]'
+      );
+
+      select.value = heading.tagName.toLowerCase();
+    }
+
+    _updateFontSizeDropdown() {
+
+      const sel = window.getSelection();
+
+      if (!sel.rangeCount) return;
+
+      let node = sel.anchorNode;
+
+      if (node.nodeType === 3) {
+        node = node.parentElement;
+      }
+
+      const size = parseInt(
+        window.getComputedStyle(node).fontSize
+      );
+
+      const select = this.wrapper.querySelector(
+        'select[data-cmd="fontSize"]'
+      );
+
+      const closest = FONT_SIZES.reduce(
+        (a,b)=>
+          Math.abs(b-size) < Math.abs(a-size)
+          ? b
+          : a
+      );
+
+      select.value = closest;
+    }
+
+    _updateColorIndicator() {
+
+      const sel = window.getSelection();
+
+      if (!sel.rangeCount) return;
+
+      let node = sel.anchorNode;
+
+      if (node.nodeType === 3) {
+        node = node.parentElement;
+      }
+
+      const color = window
+        .getComputedStyle(node)
+        .color;
+
+      const indicator = this.wrapper.querySelector(
+        ".af-color-indicator"
+      );
+
+      if (indicator) {
+        indicator.style.background = color;
+      }
+    }
+
     getHTML(){
       return this.editor.innerHTML;
     }
@@ -560,5 +723,15 @@
   }else{
     ArticleForge.init();
   }
+
+  document.addEventListener("selectionchange", () => {
+
+      if (!this.editor.contains(document.activeElement) &&
+          !this.editor.contains(window.getSelection()?.anchorNode)) {
+        return;
+      }
+
+      this._updateToolbarState();
+  });
 
 })(window);
