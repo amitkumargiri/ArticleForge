@@ -724,14 +724,4 @@
     ArticleForge.init();
   }
 
-  document.addEventListener("selectionchange", () => {
-
-      if (!this.editor.contains(document.activeElement) &&
-          !this.editor.contains(window.getSelection()?.anchorNode)) {
-        return;
-      }
-
-      this._updateToolbarState();
-  });
-
 })(window);
